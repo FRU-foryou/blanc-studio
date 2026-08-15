@@ -353,8 +353,9 @@
 
         <iframe name="booking_hidden_iframe" id="booking_hidden_iframe" style="display:none;"></iframe>
 
+        <!-- 串接最新的預約專用 GAS 網址 (AKfycbwgOudQDQEFhVuWAVrZL6MXZzp_WyIOfjKmfuMQUV44eLCXk6IWooHi28zctYRiWZTZ) -->
         <form id="finalBookingForm" 
-              action="https://script.google.com/macros/s/AKfycbwpNm827UL6fTm2KRF0QlPMIyc7IjuiyESF7oUwID6sSEcYJbTBqtGh3uURwTAjjIAp/exec" 
+              action="https://script.google.com/macros/s/AKfycbwgOudQDQEFhVuWAVrZL6MXZzp_WyIOfjKmfuMQUV44eLCXk6IWooHi28zctYRiWZTZ/exec" 
               method="POST" 
               target="booking_hidden_iframe" 
               class="space-y-4">
@@ -409,7 +410,7 @@
         </form>
       </section>
 
-      <!-- ================= STEP 5: 預約成功畫面 ================= -->
+      <!-- ================= STEP 5: 預約成功畫面 (加入官方 LINE 按鈕) ================= -->
       <section id="step-success" class="step-pane hidden text-center py-8">
         <div class="w-14 h-14 bg-linen-100 border border-linen-300 rounded-full flex items-center justify-center text-linen-700 mx-auto mb-4">
           <i data-lucide="calendar-heart" class="w-7 h-7"></i>
@@ -428,12 +429,20 @@
         </div>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <!-- 官方 LINE 領取憑證按鈕 -->
+          <a href="https://line.me/R/ti/p/@your_line_id" target="_blank" class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#06C755] text-white text-xs font-semibold hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-sm">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>加入官方 LINE 領取憑證</span>
+          </a>
           <a id="google-cal-btn" target="_blank" class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-linen-200 text-linen-800 text-xs font-semibold hover:bg-linen-300 transition-all flex items-center justify-center gap-2">
             <i data-lucide="calendar-plus" class="w-4 h-4"></i>
-            <span>加入 Google 行事曆</span>
+            <span>加入行事曆</span>
           </a>
-          <button type="button" onclick="location.reload()" class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-linen-800 text-white text-xs font-semibold hover:bg-linen-900 transition-all">
-            返回首頁 / 重新預約
+        </div>
+        
+        <div class="mt-4">
+          <button type="button" onclick="location.reload()" class="text-xs text-linen-500 hover:text-linen-800 underline">
+            返回首頁 / 預約下一筆
           </button>
         </div>
       </section>
@@ -447,12 +456,12 @@
     <p class="text-[10px] text-linen-400 mt-0.5">© 2026 Blanc Studio. Powered by Fru 客製所 自動化系統</p>
   </footer>
 
-  <!-- ================= JS 核心 (連續時長防撞排程引擎) ================= -->
+  <!-- ================= JS 核心 ================= -->
   <script>
     lucide.createIcons();
 
     // 最新的 Google Apps Script 網址
-    const GAS_GET_URL = "https://script.google.com/macros/s/AKfycbwpNm827UL6fTm2KRF0QlPMIyc7IjuiyESF7oUwID6sSEcYJbTBqtGh3uURwTAjjIAp/exec";
+    const GAS_GET_URL = "https://script.google.com/macros/s/AKfycbwgOudQDQEFhVuWAVrZL6MXZzp_WyIOfjKmfuMQUV44eLCXk6IWooHi28zctYRiWZTZ/exec";
 
     let allStylistsSchedule = {
       Yuki: { bookedSlots: [], weeklyOff: [0, 1], specialOffDates: [], manualClosedSlots: [] },
