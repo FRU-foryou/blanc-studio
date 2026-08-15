@@ -26,7 +26,7 @@
               200: '#EDE4D8',
               300: '#DFCDB8',
               400: '#C7AF93',
-              500: '#AE9173',
+              50: '#AE9173',
               600: '#8E7356',
               700: '#6E563E',
               800: '#4E3C2B',
@@ -310,7 +310,7 @@
         <!-- 說明提示 -->
         <div class="flex items-center justify-between text-[11px] text-linen-500 mb-3 px-1">
           <span class="flex items-center gap-1">
-            <i data-lucide="info" class="w-3.5 h-3.5 text-linen-400"></i> 淺白：可預約 ｜ 灰色：已約滿 / 休息
+            <i data-lucide="info" class="w-3.5 h-3.5 text-linen-400"></i> 淺白：可預約 ｜ 灰色：已約滿 / 公休
           </span>
           <span id="current-selected-time-text" class="font-semibold text-roseaccent">請點選時段</span>
         </div>
@@ -370,7 +370,7 @@
 
         <!-- 串接最新的預約專用 GAS 網址 -->
         <form id="finalBookingForm" 
-              action="https://script.google.com/macros/s/AKfycbw_6Zv2T7dMtDeRbjczzGhLXpJjogDsoqIcD3rTfVbKZlHwGDDG_IKCuCWhQ0do-zOx/exec" 
+              action="https://script.google.com/macros/s/AKfycbxc68mHtb6XYWrZ1jZEOqaGWy2oEorr5Oxquoy7bpHqxhU4KmshDgSF2Sg0W9SK30IM/exec" 
               method="POST" 
               target="booking_hidden_iframe" 
               class="space-y-4">
@@ -462,9 +462,37 @@
     <p class="text-[10px] text-linen-400 mt-0.5">© 2026 Blanc Studio. Powered by Fru 客製所 自動化系統</p>
   </footer>
 
-  <!-- ================= JS 邏輯 ================= -->
+  <!-- ================= JS 邏輯 (連線 Google 試算表即時檔期) ================= -->
   <script>
     lucide.createIcons();
+
+    // 最新的 Google Apps Script 網址
+    const GAS_GET_URL = "https://script.google.com/macros/s/AKfycbxc68mHtb6XYWrZ1jZEOqaGWy2oEorr5Oxquoy7bpHqxhU4KmshDgSF2Sg0W9SK30IM/exec";
+
+    // 試算表同步的公休與已約檔期資料
+    let serverScheduleData = {
+      bookedSlots: [],
+      weeklyOff: [],
+      specialOffDates: [],
+      manualClosedSlots: []
+    };
+
+    // 載入試算表資料
+    async function fetchServerSchedule() {
+      try {
+        const res = await fetch(GAS_GET_URL);
+        const data = await res.json();
+        if (data.status === "success") {
+          serverScheduleData = data;
+          console.log("成功從 Google 試算表同步排程資料：", serverScheduleData);
+        }
+      } catch (err) {
+        console.warn("無法取得試算表排程，使用本地預設狀態：", err);
+      }
+    }
+
+    // 網頁載入時立刻同步
+    fetchServerSchedule();
 
     const bookingState = {
       services: [],
@@ -590,12 +618,13 @@
       });
     });
 
-    toStep3Btn.addEventListener('click', () => {
+    toStep3Btn.addEventListener('click', async () => {
+      await fetchServerSchedule();
       initWeekCalendar();
       goToStep(3);
     });
 
-    // 5. 週曆條 + 6 欄時段網格核心邏輯
+    // ================= 5. 週曆條 + 6 欄時段網格 (連動試算表公休與已約) =================
     let currentWeekStartDate = new Date();
     currentWeekStartDate.setHours(0, 0, 0, 0);
 
@@ -640,7 +669,7 @@
         d.setDate(startDate.getDate() + i);
 
         const dayWrapper = document.createElement('div');
-        dayWrapper.className = 'flex flex-col items-center cursor-pointer group py-1';
+        dayWrapper.className = 'flex flex-col items-center py-1';
 
         const dayNameLabel = document.createElement('span');
         dayNameLabel.className = 'text-[10px] text-linen-400 mb-1.5 font-medium';
@@ -652,15 +681,25 @@
 
         const formattedDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-        if (bookingState.date === formattedDate) {
+        // 判斷是否為公休日（來自 Google 試算表設定）
+        const isWeeklyOff = serverScheduleData.weeklyOff.includes(d.getDay());
+        const isSpecialOff = serverScheduleData.specialOffDates.includes(formattedDate);
+        const isClosed = isWeeklyOff || isSpecialOff;
+
+        if (d < today || isClosed) {
+          dayNumberBtn.classList.add('text-linen-300', 'cursor-not-allowed', 'bg-linen-100/50');
+          if (isClosed) {
+            dayNameLabel.innerText += ' (休)';
+          }
+        } else if (bookingState.date === formattedDate) {
           dayNumberBtn.classList.add('bg-roseaccent', 'text-white', 'shadow-sm');
-        } else if (d < today) {
-          dayNumberBtn.classList.add('text-linen-300', 'cursor-not-allowed');
+          dayWrapper.classList.add('cursor-pointer');
         } else {
           dayNumberBtn.classList.add('text-charcoal', 'hover:bg-linen-100');
+          dayWrapper.classList.add('cursor-pointer');
         }
 
-        if (d >= today) {
+        if (d >= today && !isClosed) {
           dayWrapper.addEventListener('click', () => {
             bookingState.date = formattedDate;
             bookingState.time = '';
@@ -690,15 +729,20 @@
       denseTimeGrid.innerHTML = '';
       currentSelectedTimeText.innerText = `${dateStr} 請選擇時段`;
 
-      allTimeSlots.forEach((timeStr, idx) => {
+      allTimeSlots.forEach((timeStr) => {
         const slotBtn = document.createElement('button');
         slotBtn.type = 'button';
         slotBtn.innerText = timeStr;
 
-        const isBooked = (idx % 7 === 2) || (idx % 11 === 4) || (idx > 48);
+        const currentDateTimeStr = `${dateStr} ${timeStr}`;
+
+        // 判斷是否為「已被預約」或「試算表手動關閉」的時段
+        const isBooked = serverScheduleData.bookedSlots.includes(currentDateTimeStr) || 
+                         serverScheduleData.manualClosedSlots.includes(currentDateTimeStr);
 
         if (isBooked) {
           slotBtn.className = 'py-2 sm:py-2.5 rounded-lg bg-linen-100/70 text-linen-300 text-[11px] font-light cursor-not-allowed border border-transparent';
+          slotBtn.title = "已約滿 / 暫不開放";
           slotBtn.disabled = true;
         } else {
           slotBtn.className = 'time-pill py-2 sm:py-2.5 rounded-lg bg-linen-50 hover:bg-linen-200 text-charcoal text-[11px] font-medium transition-all border border-linen-200/80';
