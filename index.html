@@ -60,7 +60,7 @@
       border-radius: 9999px;
     }
     .glass-card {
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(12px);
     }
   </style>
@@ -368,9 +368,9 @@
 
         <iframe name="booking_hidden_iframe" id="booking_hidden_iframe" style="display:none;"></iframe>
 
-        <!-- 串接最新的預約專用 GAS 網址 (AKfycbzm6cyRAOi4...) -->
+        <!-- 串接最新的預約專用 GAS 網址 (AKfycbwuLOtOfMamZtL0XwvHSK1LAmQeJcpCPV1lgTgnH36Ijn4sGjFw6O3Dt4StI_2Cngxl) -->
         <form id="finalBookingForm" 
-              action="https://script.google.com/macros/s/AKfycbzm6cyRAOi4UNHr3jQirswwr42h3uEY_7h0K9hOXSldB8wOgrZn0cXhB_dVfXUD20-l/exec" 
+              action="https://script.google.com/macros/s/AKfycbwuLOtOfMamZtL0XwvHSK1LAmQeJcpCPV1lgTgnH36Ijn4sGjFw6O3Dt4StI_2Cngxl/exec" 
               method="POST" 
               target="booking_hidden_iframe" 
               class="space-y-4">
@@ -462,14 +462,14 @@
     <p class="text-[10px] text-linen-400 mt-0.5">© 2026 Blanc Studio. Powered by Fru 客製所 自動化系統</p>
   </footer>
 
-  <!-- ================= JS 邏輯 (連線 Google 試算表即時檔期) ================= -->
+  <!-- ================= JS 核心極速架構 ================= -->
   <script>
     lucide.createIcons();
 
     // 最新的 Google Apps Script 網址
-    const GAS_GET_URL = "https://script.google.com/macros/s/AKfycbzm6cyRAOi4UNHr3jQirswwr42h3uEY_7h0K9hOXSldB8wOgrZn0cXhB_dVfXUD20-l/exec";
+    const GAS_GET_URL = "https://script.google.com/macros/s/AKfycbwuLOtOfMamZtL0XwvHSK1LAmQeJcpCPV1lgTgnH36Ijn4sGjFw6O3Dt4StI_2Cngxl/exec";
 
-    // 試算表同步的公休與已約檔期資料
+    // 試算表排程資料 (預設空集合，背景靜默同步)
     let serverScheduleData = {
       bookedSlots: [],
       weeklyOff: [],
@@ -477,23 +477,32 @@
       manualClosedSlots: []
     };
 
-    // 載入試算表資料
-    async function fetchServerSchedule() {
+    // 🚀 背景靜默同步：打開網頁立刻在背景跑，不卡住使用者任何點擊
+    async function fetchServerScheduleBackground() {
       try {
         const res = await fetch(GAS_GET_URL);
         const data = await res.json();
         if (data.status === "success") {
-          serverScheduleData = data;
-          console.log("成功從 Google 試算表同步排程資料：", serverScheduleData);
+          serverScheduleData = {
+            bookedSlots: data.bookedSlots || [],
+            weeklyOff: (data.weeklyOff || []).map(Number),
+            specialOffDates: data.specialOffDates || [],
+            manualClosedSlots: data.manualClosedSlots || []
+          };
+          console.log("排程資料同步成功：", serverScheduleData);
+          if (currentStep === 3) {
+            renderWeekStrip(currentWeekStartDate);
+          }
         }
       } catch (err) {
-        console.warn("無法取得試算表排程，使用本地預設狀態：", err);
+        console.log("使用排程快取狀態");
       }
     }
 
-    // 網頁載入時立刻同步
-    fetchServerSchedule();
+    // 網頁載入時直接觸發背景偷跑
+    fetchServerScheduleBackground();
 
+    let currentStep = 1;
     const bookingState = {
       services: [],
       totalPrice: 0,
@@ -560,8 +569,9 @@
       }
     }
 
-    // 3. 步驟切換
+    // 3. 步驟切換 (0ms 瞬切)
     function goToStep(step) {
+      currentStep = step;
       document.querySelectorAll('.step-pane').forEach(p => p.classList.add('hidden'));
       
       if (step <= 4) {
@@ -618,13 +628,13 @@
       });
     });
 
-    toStep3Btn.addEventListener('click', async () => {
-      await fetchServerSchedule();
+    // ⚡ 點擊立刻切換，完全不等待 fetch 阻擋
+    toStep3Btn.addEventListener('click', () => {
       initWeekCalendar();
       goToStep(3);
     });
 
-    // ================= 5. 週曆條 + 6 欄時段網格 (連動試算表公休與已約) =================
+    // ================= 5. 週曆條 + 6 欄時段網格 =================
     let currentWeekStartDate = new Date();
     currentWeekStartDate.setHours(0, 0, 0, 0);
 
@@ -664,6 +674,8 @@
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
+      let firstAvailableDate = null;
+
       for (let i = 0; i < 7; i++) {
         const d = new Date(startDate);
         d.setDate(startDate.getDate() + i);
@@ -681,25 +693,30 @@
 
         const formattedDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-        // 判斷是否為公休日（來自 Google 試算表設定）
-        const isWeeklyOff = serverScheduleData.weeklyOff.includes(d.getDay());
+        // 判斷公休 (嚴格轉為數字比對)
+        const isWeeklyOff = serverScheduleData.weeklyOff.map(Number).includes(d.getDay());
         const isSpecialOff = serverScheduleData.specialOffDates.includes(formattedDate);
         const isClosed = isWeeklyOff || isSpecialOff;
 
         if (d < today || isClosed) {
           dayNumberBtn.classList.add('text-linen-300', 'cursor-not-allowed', 'bg-linen-100/50');
           if (isClosed) {
-            dayNameLabel.innerText += ' (休)';
+            dayNameLabel.innerText = `${dayNames[d.getDay()]} (休)`;
+            dayNameLabel.classList.add('text-linen-300');
           }
-        } else if (bookingState.date === formattedDate) {
-          dayNumberBtn.classList.add('bg-roseaccent', 'text-white', 'shadow-sm');
-          dayWrapper.classList.add('cursor-pointer');
         } else {
-          dayNumberBtn.classList.add('text-charcoal', 'hover:bg-linen-100');
-          dayWrapper.classList.add('cursor-pointer');
-        }
+          // 紀錄第一個可預約的日期
+          if (!firstAvailableDate) {
+            firstAvailableDate = formattedDate;
+          }
 
-        if (d >= today && !isClosed) {
+          if (bookingState.date === formattedDate) {
+            dayNumberBtn.classList.add('bg-roseaccent', 'text-white', 'shadow-sm');
+          } else {
+            dayNumberBtn.classList.add('text-charcoal', 'hover:bg-linen-100');
+          }
+          dayWrapper.classList.add('cursor-pointer');
+
           dayWrapper.addEventListener('click', () => {
             bookingState.date = formattedDate;
             bookingState.time = '';
@@ -717,11 +734,20 @@
         weekCalendarStrip.appendChild(dayWrapper);
       }
 
-      if (!bookingState.date) {
-        const firstValidDate = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}-${String(startDate.getDate()).padStart(2, '0')}`;
-        bookingState.date = firstValidDate;
-        renderDenseTimeSlots(firstValidDate);
-        renderWeekStrip(startDate);
+      // 如果當前選取的日期是公休或過去，自動切換至第一個可約日期
+      const isCurrentDateClosed = serverScheduleData.weeklyOff.map(Number).includes(new Date(bookingState.date).getDay()) || 
+                                  serverScheduleData.specialOffDates.includes(bookingState.date);
+
+      if (!bookingState.date || isCurrentDateClosed) {
+        if (firstAvailableDate) {
+          bookingState.date = firstAvailableDate;
+          renderDenseTimeSlots(firstAvailableDate);
+          renderWeekStrip(startDate);
+        } else {
+          denseTimeGrid.innerHTML = '<div class="col-span-6 text-center py-8 text-xs text-linen-400">本週無開放預約時段，請切換至下一週</div>';
+        }
+      } else {
+        renderDenseTimeSlots(bookingState.date);
       }
     }
 
@@ -736,7 +762,6 @@
 
         const currentDateTimeStr = `${dateStr} ${timeStr}`;
 
-        // 判斷是否為「已被預約」或「試算表手動關閉」的時段
         const isBooked = serverScheduleData.bookedSlots.includes(currentDateTimeStr) || 
                          serverScheduleData.manualClosedSlots.includes(currentDateTimeStr);
 
@@ -791,7 +816,6 @@
       bookingState.date = todayStr;
       bookingState.time = '';
       renderWeekStrip(currentWeekStartDate);
-      renderDenseTimeSlots(todayStr);
     });
 
     toStep4Btn.addEventListener('click', () => {
