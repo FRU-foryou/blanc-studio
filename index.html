@@ -26,7 +26,7 @@
               200: '#EDE4D8',
               300: '#DFCDB8',
               400: '#C7AF93',
-              500: '#AE9173',
+              50: '#AE9173',
               600: '#8E7356',
               700: '#6E563E',
               800: '#4E3C2B',
@@ -228,41 +228,34 @@
         </div>
       </section>
 
-      <!-- ================= STEP 2: 選擇設計師 ================= -->
+      <!-- ================= STEP 2: 選擇設計師 (只保留指定設計師) ================= -->
       <section id="step-2" class="step-pane hidden">
         <div class="flex items-center justify-between pb-3 border-b border-linen-200 mb-5">
           <h2 class="text-sm font-semibold text-charcoal flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-linen-500"></span> 請選擇指定設計師
           </h2>
-          <span class="text-xs text-linen-500 font-light">亦可由系統排程</span>
+          <span class="text-xs text-linen-500 font-light">各設計師排程獨立</span>
         </div>
 
-        <div class="grid sm:grid-cols-3 gap-3.5" id="stylist-list">
-          <div class="stylist-card border-2 border-linen-200 rounded-2xl p-4 text-center cursor-pointer hover:border-linen-500 transition-all bg-white/60" data-stylist="不指定 (由系統安排最快時段)">
-            <div class="w-14 h-14 rounded-full bg-linen-100 mx-auto flex items-center justify-center text-linen-600 mb-2 border border-linen-200">
-              <i data-lucide="shuffle" class="w-5 h-5"></i>
-            </div>
-            <h3 class="font-semibold text-xs text-charcoal">不指定設計師</h3>
-            <p class="text-[10px] text-linen-500 mt-0.5">彈性最高・可約時段最多</p>
-            <span class="mt-2 inline-block px-2 py-0.5 text-[9px] rounded-full bg-linen-100 text-linen-700">最推薦</span>
-          </div>
-
-          <div class="stylist-card border-2 border-linen-200 rounded-2xl p-4 text-center cursor-pointer hover:border-linen-500 transition-all bg-white/60" data-stylist="Yuki (資深美甲美學總監)">
-            <div class="w-14 h-14 rounded-full bg-linen-200 mx-auto flex items-center justify-center text-linen-700 mb-2 border border-linen-300 font-serif font-bold">
+        <div class="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto" id="stylist-list">
+          <!-- 設計師 1: Yuki -->
+          <div class="stylist-card border-2 border-linen-200 rounded-2xl p-5 text-center cursor-pointer hover:border-linen-500 transition-all bg-white/60" data-stylist="Yuki (資深美甲美學總監)" data-name="Yuki">
+            <div class="w-16 h-16 rounded-full bg-linen-200 mx-auto flex items-center justify-center text-linen-700 mb-3 border border-linen-300 font-serif font-bold text-lg">
               Y
             </div>
-            <h3 class="font-semibold text-xs text-charcoal">Yuki</h3>
-            <p class="text-[10px] text-linen-500 mt-0.5">美甲總監 ｜ 暈染法式專精</p>
-            <span class="mt-2 inline-block px-2 py-0.5 text-[9px] rounded-full bg-linen-100 text-linen-700">年資 6 年</span>
+            <h3 class="font-semibold text-sm text-charcoal">Yuki</h3>
+            <p class="text-xs text-linen-500 mt-1">資深美甲總監 ｜ 暈染法式專精</p>
+            <span class="mt-2.5 inline-block px-3 py-0.5 text-[10px] rounded-full bg-linen-100 text-linen-700">專屬檔期</span>
           </div>
 
-          <div class="stylist-card border-2 border-linen-200 rounded-2xl p-4 text-center cursor-pointer hover:border-linen-500 transition-all bg-white/60" data-stylist="Mina (美睫與手足護理師)">
-            <div class="w-14 h-14 rounded-full bg-linen-200 mx-auto flex items-center justify-center text-linen-700 mb-2 border border-linen-300 font-serif font-bold">
+          <!-- 設計師 2: Mina -->
+          <div class="stylist-card border-2 border-linen-200 rounded-2xl p-5 text-center cursor-pointer hover:border-linen-500 transition-all bg-white/60" data-stylist="Mina (美睫與手足護理師)" data-name="Mina">
+            <div class="w-16 h-16 rounded-full bg-linen-200 mx-auto flex items-center justify-center text-linen-700 mb-3 border border-linen-300 font-serif font-bold text-lg">
               M
             </div>
-            <h3 class="font-semibold text-xs text-charcoal">Mina</h3>
-            <p class="text-[10px] text-linen-500 mt-0.5">日式美睫 ｜ 柔嫩深層 SPA</p>
-            <span class="mt-2 inline-block px-2 py-0.5 text-[9px] rounded-full bg-linen-100 text-linen-700">細膩輕柔</span>
+            <h3 class="font-semibold text-sm text-charcoal">Mina</h3>
+            <p class="text-xs text-linen-500 mt-1">日式美睫 ｜ 柔嫩深層 SPA</p>
+            <span class="mt-2.5 inline-block px-3 py-0.5 text-[10px] rounded-full bg-linen-100 text-linen-700">專屬檔期</span>
           </div>
         </div>
 
@@ -280,7 +273,6 @@
       <!-- ================= STEP 3: 水平滑動週曆 ＋ 6 欄高密度時段網格 ================= -->
       <section id="step-3" class="step-pane hidden">
         
-        <!-- 頂部月份標題與快捷按鈕 -->
         <div class="flex items-center justify-between pb-3 border-b border-linen-200 mb-4">
           <div class="flex items-center gap-2">
             <h2 id="week-month-title" class="text-base font-bold text-charcoal"></h2>
@@ -300,14 +292,11 @@
           </div>
         </div>
 
-        <!-- 7 天水平日曆條 -->
         <div class="bg-white rounded-2xl p-3 border border-linen-200/90 shadow-sm mb-5">
           <div id="week-calendar-strip" class="grid grid-cols-7 gap-1 text-center">
-            <!-- JS 動態生成 7 天 -->
           </div>
         </div>
 
-        <!-- 說明提示 -->
         <div class="flex items-center justify-between text-[11px] text-linen-500 mb-3 px-1">
           <span class="flex items-center gap-1">
             <i data-lucide="info" class="w-3.5 h-3.5 text-linen-400"></i> 淺白：可預約 ｜ 灰色：已約滿 / 公休
@@ -315,10 +304,8 @@
           <span id="current-selected-time-text" class="font-semibold text-roseaccent">請點選時段</span>
         </div>
 
-        <!-- 6 欄高密度時間網格 -->
         <div class="bg-white rounded-2xl p-3 sm:p-4 border border-linen-200/90 shadow-sm">
           <div id="dense-time-grid" class="grid grid-cols-6 gap-1.5 sm:gap-2 max-h-72 overflow-y-auto pr-1 custom-scroll">
-            <!-- JS 動態生成 6 欄時段 -->
           </div>
         </div>
 
@@ -342,7 +329,6 @@
           <span class="text-xs text-linen-500 font-light">最後一步</span>
         </div>
 
-        <!-- 明細卡片 -->
         <div class="bg-linen-100/70 rounded-2xl p-4 border border-linen-200 mb-5 space-y-2 text-xs text-linen-700">
           <div class="flex justify-between">
             <span class="text-linen-500">施作項目：</span>
@@ -368,9 +354,9 @@
 
         <iframe name="booking_hidden_iframe" id="booking_hidden_iframe" style="display:none;"></iframe>
 
-        <!-- 串接最新的預約專用 GAS 網址 (AKfycbwuLOtOfMamZtL0XwvHSK1LAmQeJcpCPV1lgTgnH36Ijn4sGjFw6O3Dt4StI_2Cngxl) -->
+        <!-- 串接最新的預約專用 GAS 網址 (AKfycbzMhGLC5HT2h450I3MuqTTLrq5G1d5DX55vXqqeqCFWxls6F4mwJBQR5Yp5EtmfRiX8) -->
         <form id="finalBookingForm" 
-              action="https://script.google.com/macros/s/AKfycbwuLOtOfMamZtL0XwvHSK1LAmQeJcpCPV1lgTgnH36Ijn4sGjFw6O3Dt4StI_2Cngxl/exec" 
+              action="https://script.google.com/macros/s/AKfycbzMhGLC5HT2h450I3MuqTTLrq5G1d5DX55vXqqeqCFWxls6F4mwJBQR5Yp5EtmfRiX8/exec" 
               method="POST" 
               target="booking_hidden_iframe" 
               class="space-y-4">
@@ -462,47 +448,40 @@
     <p class="text-[10px] text-linen-400 mt-0.5">© 2026 Blanc Studio. Powered by Fru 客製所 自動化系統</p>
   </footer>
 
-  <!-- ================= JS 核心極速架構 ================= -->
+  <!-- ================= JS 核心 (模式 B: 獨立指定設計師檔期) ================= -->
   <script>
     lucide.createIcons();
 
-    // 最新的 Google Apps Script 網址
-    const GAS_GET_URL = "https://script.google.com/macros/s/AKfycbwuLOtOfMamZtL0XwvHSK1LAmQeJcpCPV1lgTgnH36Ijn4sGjFw6O3Dt4StI_2Cngxl/exec";
+    const GAS_GET_URL = "https://script.google.com/macros/s/AKfycbzMhGLC5HT2h450I3MuqTTLrq5G1d5DX55vXqqeqCFWxls6F4mwJBQR5Yp5EtmfRiX8/exec";
 
-    // 試算表排程資料 (預設空集合，背景靜默同步)
-    let serverScheduleData = {
-      bookedSlots: [],
-      weeklyOff: [],
-      specialOffDates: [],
-      manualClosedSlots: []
+    // 儲存各設計師獨立排程快取
+    let allStylistsSchedule = {
+      Yuki: { bookedSlots: [], weeklyOff: [0, 1], specialOffDates: [], manualClosedSlots: [] },
+      Mina: { bookedSlots: [], weeklyOff: [2, 3], specialOffDates: [], manualClosedSlots: [] }
     };
 
-    // 🚀 背景靜默同步：打開網頁立刻在背景跑，不卡住使用者任何點擊
+    // 背景靜默同步
     async function fetchServerScheduleBackground() {
       try {
         const res = await fetch(GAS_GET_URL);
         const data = await res.json();
-        if (data.status === "success") {
-          serverScheduleData = {
-            bookedSlots: data.bookedSlots || [],
-            weeklyOff: (data.weeklyOff || []).map(Number),
-            specialOffDates: data.specialOffDates || [],
-            manualClosedSlots: data.manualClosedSlots || []
-          };
-          console.log("排程資料同步成功：", serverScheduleData);
+        if (data.status === "success" && data.stylists) {
+          allStylistsSchedule = data.stylists;
+          console.log("所有設計師專屬排程已同步：", allStylistsSchedule);
           if (currentStep === 3) {
             renderWeekStrip(currentWeekStartDate);
           }
         }
       } catch (err) {
-        console.log("使用排程快取狀態");
+        console.log("使用本地設計師快取");
       }
     }
 
-    // 網頁載入時直接觸發背景偷跑
     fetchServerScheduleBackground();
 
     let currentStep = 1;
+    let selectedStylistKey = "Yuki"; // 預設指定 Yuki
+
     const bookingState = {
       services: [],
       totalPrice: 0,
@@ -511,6 +490,16 @@
       date: '',
       time: ''
     };
+
+    // 取得當前選中設計師的排程
+    function getCurrentSchedule() {
+      return allStylistsSchedule[selectedStylistKey] || {
+        bookedSlots: [],
+        weeklyOff: [],
+        specialOffDates: [],
+        manualClosedSlots: []
+      };
+    }
 
     // 1. 分類過濾
     const catBtns = document.querySelectorAll('.category-filter-btn');
@@ -622,13 +611,14 @@
         card.classList.remove('border-linen-200', 'bg-white/60');
 
         bookingState.stylist = card.dataset.stylist;
+        selectedStylistKey = card.dataset.name; // 'Yuki' 或 'Mina'
+
         toStep3Btn.disabled = false;
         toStep3Btn.classList.remove('bg-linen-300', 'cursor-not-allowed');
         toStep3Btn.classList.add('bg-linen-800', 'hover:bg-linen-900', 'shadow-md');
       });
     });
 
-    // ⚡ 點擊立刻切換，完全不等待 fetch 阻擋
     toStep3Btn.addEventListener('click', () => {
       initWeekCalendar();
       goToStep(3);
@@ -674,6 +664,7 @@
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
+      const curSched = getCurrentSchedule();
       let firstAvailableDate = null;
 
       for (let i = 0; i < 7; i++) {
@@ -693,9 +684,9 @@
 
         const formattedDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-        // 判斷公休 (嚴格轉為數字比對)
-        const isWeeklyOff = serverScheduleData.weeklyOff.map(Number).includes(d.getDay());
-        const isSpecialOff = serverScheduleData.specialOffDates.includes(formattedDate);
+        // 依據當前設計師判斷公休
+        const isWeeklyOff = (curSched.weeklyOff || []).map(Number).includes(d.getDay());
+        const isSpecialOff = (curSched.specialOffDates || []).includes(formattedDate);
         const isClosed = isWeeklyOff || isSpecialOff;
 
         if (d < today || isClosed) {
@@ -705,7 +696,6 @@
             dayNameLabel.classList.add('text-linen-300');
           }
         } else {
-          // 紀錄第一個可預約的日期
           if (!firstAvailableDate) {
             firstAvailableDate = formattedDate;
           }
@@ -734,9 +724,9 @@
         weekCalendarStrip.appendChild(dayWrapper);
       }
 
-      // 如果當前選取的日期是公休或過去，自動切換至第一個可約日期
-      const isCurrentDateClosed = serverScheduleData.weeklyOff.map(Number).includes(new Date(bookingState.date).getDay()) || 
-                                  serverScheduleData.specialOffDates.includes(bookingState.date);
+      // 自動避開公休日
+      const isCurrentDateClosed = (curSched.weeklyOff || []).map(Number).includes(new Date(bookingState.date).getDay()) || 
+                                  (curSched.specialOffDates || []).includes(bookingState.date);
 
       if (!bookingState.date || isCurrentDateClosed) {
         if (firstAvailableDate) {
@@ -744,7 +734,7 @@
           renderDenseTimeSlots(firstAvailableDate);
           renderWeekStrip(startDate);
         } else {
-          denseTimeGrid.innerHTML = '<div class="col-span-6 text-center py-8 text-xs text-linen-400">本週無開放預約時段，請切換至下一週</div>';
+          denseTimeGrid.innerHTML = '<div class="col-span-6 text-center py-8 text-xs text-linen-400">本週該設計師無開放時段，請切換至下一週</div>';
         }
       } else {
         renderDenseTimeSlots(bookingState.date);
@@ -755,6 +745,8 @@
       denseTimeGrid.innerHTML = '';
       currentSelectedTimeText.innerText = `${dateStr} 請選擇時段`;
 
+      const curSched = getCurrentSchedule();
+
       allTimeSlots.forEach((timeStr) => {
         const slotBtn = document.createElement('button');
         slotBtn.type = 'button';
@@ -762,12 +754,13 @@
 
         const currentDateTimeStr = `${dateStr} ${timeStr}`;
 
-        const isBooked = serverScheduleData.bookedSlots.includes(currentDateTimeStr) || 
-                         serverScheduleData.manualClosedSlots.includes(currentDateTimeStr);
+        // 判斷該設計師時段是否約滿
+        const isBooked = (curSched.bookedSlots || []).includes(currentDateTimeStr) || 
+                         (curSched.manualClosedSlots || []).includes(currentDateTimeStr);
 
         if (isBooked) {
           slotBtn.className = 'py-2 sm:py-2.5 rounded-lg bg-linen-100/70 text-linen-300 text-[11px] font-light cursor-not-allowed border border-transparent';
-          slotBtn.title = "已約滿 / 暫不開放";
+          slotBtn.title = "該設計師此時段已約滿";
           slotBtn.disabled = true;
         } else {
           slotBtn.className = 'time-pill py-2 sm:py-2.5 rounded-lg bg-linen-50 hover:bg-linen-200 text-charcoal text-[11px] font-medium transition-all border border-linen-200/80';
