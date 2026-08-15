@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blanc Studio ｜ 溫柔美學・線上預約系統</title>
+  <meta name="description" content="給自己一段放鬆的時間。專業日式美甲、美睫與深層肌膚護理線上預約。">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            linen: {
+              50: '#FDFBF7',
+              100: '#F7F2EB',
+              200: '#EDE4D8',
+              300: '#DFCDB8',
+              400: '#C7AF93',
+              500: '#AE9173',
+              600: '#8E7356',
+              700: '#6E563E',
+              800: '#4E3C2B',
+              900: '#32261B',
+            },
+            nude: '#EFE7DE',
+            roseaccent: '#D9776E',
+            charcoal: '#2D2926',
+          },
+          fontFamily: {
+            serif: ['"Noto Serif TC"', 'serif'],
+            sans: ['"Noto Sans TC"', '"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #F8F6F2;
+      color: #32261B;
+      font-family: 'Noto Sans TC', sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 4px;
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: #DFCDB8;
+      border-radius: 9999px;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="selection:bg-linen-200 selection:text-linen-900 min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="w-full border-b border-linen-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-5 h-16 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-linen-100 border border-linen-300 flex items-center justify-center text-linen-700">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <span class="text-base sm:text-lg font-serif font-semibold tracking-wider text-charcoal">Blanc Studio</span>
+          <p class="text-[10px] text-linen-500 font-light tracking-widest">NAIL & BEAUTY SALON</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <span class="text-xs text-linen-600 flex items-center gap-1">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-linen-400"></i> <span class="hidden sm:inline">台北市大安區 (</span>預約制<span class="hidden sm:inline">)</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex-1 w-full">
+    
+    <!-- Title -->
+    <div class="text-center mb-8">
+      <span class="text-[11px] tracking-[0.2em] text-linen-500 uppercase font-medium">Online Reservation</span>
+      <h1 class="text-2xl sm:text-3xl font-serif font-semibold text-charcoal mt-1 mb-1">預約您的美好日常</h1>
+      <p class="text-xs text-linen-600 font-light">留一段靜謐時光，給自己細膩溫柔的照顧。</p>
+    </div>
+
+    <!-- Step Indicator Bar -->
+    <div class="mb-8 max-w-lg mx-auto">
+      <div class="flex items-center justify-between relative">
+        <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[2px] bg-linen-200 -z-0"></div>
+        <div id="step-progress-bar" class="absolute left-0 top-1/2 -translate-y-1/2 h-[2px] bg-linen-600 transition-all duration-300 -z-0 w-[0%]"></div>
+
+        <div class="relative z-10 flex flex-col items-center gap-1 step-indicator" data-step="1">
+          <div class="w-7 h-7 rounded-full bg-linen-700 text-white flex items-center justify-center text-xs font-semibold shadow-sm ring-4 ring-[#F8F6F2]">1</div>
+          <span class="text-[11px] font-medium text-linen-800">選擇項目</span>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center gap-1 step-indicator" data-step="2">
+          <div class="w-7 h-7 rounded-full bg-linen-200 text-linen-600 flex items-center justify-center text-xs font-semibold shadow-sm ring-4 ring-[#F8F6F2]">2</div>
+          <span class="text-[11px] font-medium text-linen-400">設計師</span>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center gap-1 step-indicator" data-step="3">
+          <div class="w-7 h-7 rounded-full bg-linen-200 text-linen-600 flex items-center justify-center text-xs font-semibold shadow-sm ring-4 ring-[#F8F6F2]">3</div>
+          <span class="text-[11px] font-medium text-linen-400">挑選時段</span>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center gap-1 step-indicator" data-step="4">
+          <div class="w-7 h-7 rounded-full bg-linen-200 text-linen-600 flex items-center justify-center text-xs font-semibold shadow-sm ring-4 ring-[#F8F6F2]">4</div>
+          <span class="text-[11px] font-medium text-linen-400">填寫資料</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking Content Card -->
+    <div class="glass-card border border-linen-200 rounded-3xl p-5 sm:p-8 shadow-sm relative">
+      
+      <!-- ================= STEP 1: 選擇服務項目 ================= -->
+      <section id="step-1" class="step-pane">
+        <div class="flex items-center justify-between pb-3 border-b border-linen-200 mb-5">
+          <h2 class="text-sm font-semibold text-charcoal flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-linen-500"></span> 請選擇施作項目（可多選）
+          </h2>
+          <span class="text-xs text-linen-500 font-light">可搭配卸甲或保養</span>
+        </div>
+
+        <div class="flex gap-2 mb-5 overflow-x-auto pb-1 custom-scroll">
+          <button type="button" class="category-filter-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-linen-700 text-white transition-all" data-cat="all">全部項目</button>
+          <button type="button" class="category-filter-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-linen-100 text-linen-700 hover:bg-linen-200 transition-all" data-cat="nail">凝膠美甲</button>
+          <button type="button" class="category-filter-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-linen-100 text-linen-700 hover:bg-linen-200 transition-all" data-cat="lash">日式美睫</button>
+          <button type="button" class="category-filter-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-linen-100 text-linen-700 hover:bg-linen-200 transition-all" data-cat="spa">手足深層 SPA</button>
+        </div>
+
+        <div class="space-y-3" id="services-list">
+          <label class="service-item flex items-start justify-between p-4 rounded-2xl border border-linen-200/90 bg-white/70 hover:bg-white hover:border-linen-400 cursor-pointer transition-all group" data-cat="nail">
+            <div class="flex items-start gap-3">
+              <input type="checkbox" name="services" value="手部單色 / 貓眼凝膠設計" data-price="1200" data-time="90" class="mt-1 w-4 h-4 rounded text-linen-700 focus:ring-linen-500 accent-linen-700">
+              <div>
+                <p class="text-sm font-semibold text-charcoal group-hover:text-linen-800">手部單色 / 貓眼凝膠設計</p>
+                <p class="text-xs text-linen-500 font-light mt-0.5">含前置基礎精緻甘皮修整、加厚建構、指緣精油滋養</p>
+                <div class="flex items-center gap-3 mt-1.5 text-[11px] text-linen-500">
+                  <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 約 90 分鐘</span>
+                </div>
+              </div>
+            </div>
+            <span class="text-sm font-semibold text-linen-700 whitespace-nowrap">NT$ 1,200</span>
+          </label>
+
+          <label class="service-item flex items-start justify-between p-4 rounded-2xl border border-linen-200/90 bg-white/70 hover:bg-white hover:border-linen-400 cursor-pointer transition-all group" data-cat="nail">
+            <div class="flex items-start gap-3">
+              <input type="checkbox" name="services" value="手部限定款 / 暈染法式手繪" data-price="1680" data-time="120" class="mt-1 w-4 h-4 rounded text-linen-700 focus:ring-linen-500 accent-linen-700">
+              <div>
+                <p class="text-sm font-semibold text-charcoal group-hover:text-linen-800">手部本月限定款 / 暈染法式手繪</p>
+                <p class="text-xs text-linen-500 font-light mt-0.5">現場提供多款當月手繪樣式選擇，含深層修甲建構</p>
+                <div class="flex items-center gap-3 mt-1.5 text-[11px] text-linen-500">
+                  <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 約 120 分鐘</span>
+                </div>
+              </div>
+            </div>
+            <span class="text-sm font-semibold text-linen-700 whitespace-nowrap">NT$ 1,680</span>
+          </label>
+
+          <label class="service-item flex items-start justify-between p-4 rounded-2xl border border-linen-200/90 bg-white/70 hover:bg-white hover:border-linen-400 cursor-pointer transition-all group" data-cat="nail">
+            <div class="flex items-start gap-3">
+              <input type="checkbox" name="services" value="溫和卸甲續作（加購）" data-price="300" data-time="30" class="mt-1 w-4 h-4 rounded text-linen-700 focus:ring-linen-500 accent-linen-700">
+              <div>
+                <p class="text-sm font-semibold text-charcoal group-hover:text-linen-800">溫和卸甲續作（加購）</p>
+                <p class="text-xs text-linen-500 font-light mt-0.5">專業包卸不傷真甲甲面（若純卸甲無續作需另計）</p>
+                <div class="flex items-center gap-3 mt-1.5 text-[11px] text-linen-500">
+                  <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 約 30 分鐘</span>
+                </div>
+              </div>
+            </div>
+            <span class="text-sm font-semibold text-linen-700 whitespace-nowrap">NT$ 300</span>
+          </label>
+
+          <label class="service-item flex items-start justify-between p-4 rounded-2xl border border-linen-200/90 bg-white/70 hover:bg-white hover:border-linen-400 cursor-pointer transition-all group" data-cat="lash">
+            <div class="flex items-start gap-3">
+              <input type="checkbox" name="services" value="日式自然空氣感美睫 (120根)" data-price="1380" data-time="75" class="mt-1 w-4 h-4 rounded text-linen-700 focus:ring-linen-500 accent-linen-700">
+              <div>
+                <p class="text-sm font-semibold text-charcoal group-hover:text-linen-800">日式自然空氣感美睫 (120根)</p>
+                <p class="text-xs text-linen-500 font-light mt-0.5">一接一極細羽量款，根根分明自然有神不厚重</p>
+                <div class="flex items-center gap-3 mt-1.5 text-[11px] text-linen-500">
+                  <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 約 75 分鐘</span>
+                </div>
+              </div>
+            </div>
+            <span class="text-sm font-semibold text-linen-700 whitespace-nowrap">NT$ 1,380</span>
+          </label>
+
+          <label class="service-item flex items-start justify-between p-4 rounded-2xl border border-linen-200/90 bg-white/70 hover:bg-white hover:border-linen-400 cursor-pointer transition-all group" data-cat="spa">
+            <div class="flex items-start gap-3">
+              <input type="checkbox" name="services" value="足部深層柔嫩蜜蠟去繭 SPA" data-price="1500" data-time="80" class="mt-1 w-4 h-4 rounded text-linen-700 focus:ring-linen-500 accent-linen-700">
+              <div>
+                <p class="text-sm font-semibold text-charcoal group-hover:text-linen-800">足部深層柔嫩蜜蠟去繭 SPA</p>
+                <p class="text-xs text-linen-500 font-light mt-0.5">足浴精油泡腳、足底硬皮修磨、植物蜜蠟深層滋潤</p>
+                <div class="flex items-center gap-3 mt-1.5 text-[11px] text-linen-500">
+                  <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 約 80 分鐘</span>
+                </div>
+              </div>
+            </div>
+            <span class="text-sm font-semibold text-linen-700 whitespace-nowrap">NT$ 1,500</span>
+          </label>
+        </div>
+
+        <div class="mt-6 pt-5 border-t border-linen-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-center sm:text-left">
+            <p class="text-xs text-linen-500">已選 <span id="selected-count" class="font-bold text-linen-800">0</span> 項 ｜ 預計 <span id="selected-duration" class="font-bold text-linen-800">0</span> 分鐘</p>
+            <p class="text-base sm:text-lg font-serif font-bold text-charcoal">合計金額：<span id="total-price" class="text-linen-700">NT$ 0</span></p>
+          </div>
+          <button type="button" id="to-step-2-btn" disabled class="w-full sm:w-auto px-8 py-3 rounded-full bg-linen-300 text-white font-medium text-xs sm:text-sm transition-all cursor-not-allowed flex items-center justify-center gap-2">
+            <span>選擇設計師</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= STEP 2: 選擇設計師 ================= -->
+      <section id="step-2" class="step-pane hidden">
+        <div class="flex items-center justify-between pb-3 border-b border-linen-200 mb-5">
+          <h2 class="text-sm font-semibold text-charcoal flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-linen-500"></span> 請選擇指定設計師
+          </h2>
+          <span class="text-xs text-linen-500 font-light">亦可由系統排程</span>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-3.5" id="stylist-list">
+          <div class="stylist-card border-2 border-linen-200 rounded-2xl p-4 text-center cursor-pointer hover:border-linen-500 transition-all bg-white/60" data-stylist="不指定 (由系統安排最快時段)">
+            <div class="w-14 h-14 rounded-full bg-linen-100 mx-auto flex items-center justify-center text-linen-600 mb-2 border border-linen-200">
+              <i data-lucide="shuffle" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-semibold text-xs text-charcoal">不指定設計師</h3>
+            <p class="text-[10px] text-linen-500 mt-0.5">彈性最高・可約時段最多</p>
+            <span class="mt-2 inline-block px-2 py-0.5 text-[9px] rounded-full bg-linen-100 text-linen-700">最推薦</span>
+          </div>
+
+          <div class="stylist-card border-2 border-linen-200 rounded-2xl p-4 text-center cursor-pointer hover:border-linen-500 transition-all bg-white/60" data-stylist="Yuki (資深美甲美學總監)">
+            <div class="w-14 h-14 rounded-full bg-linen-200 mx-auto flex items-center justify-center text-linen-700 mb-2 border border-linen-300 font-serif font-bold">
+              Y
+            </div>
+            <h3 class="font-semibold text-xs text-charcoal">Yuki</h3>
+            <p class="text-[10px] text-linen-500 mt-0.5">美甲總監 ｜ 暈染法式專精</p>
+            <span class="mt-2 inline-block px-2 py-0.5 text-[9px] rounded-full bg-linen-100 text-linen-700">年資 6 年</span>
+          </div>
+
+          <div class="stylist-card border-2 border-linen-200 rounded-2xl p-4 text-center cursor-pointer hover:border-linen-500 transition-all bg-white/60" data-stylist="Mina (美睫與手足護理師)">
+            <div class="w-14 h-14 rounded-full bg-linen-200 mx-auto flex items-center justify-center text-linen-700 mb-2 border border-linen-300 font-serif font-bold">
+              M
+            </div>
+            <h3 class="font-semibold text-xs text-charcoal">Mina</h3>
+            <p class="text-[10px] text-linen-500 mt-0.5">日式美睫 ｜ 柔嫩深層 SPA</p>
+            <span class="mt-2 inline-block px-2 py-0.5 text-[9px] rounded-full bg-linen-100 text-linen-700">細膩輕柔</span>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-5 border-t border-linen-200 flex items-center justify-between">
+          <button type="button" class="back-to-step-btn px-5 py-2.5 rounded-full text-xs font-medium text-linen-700 hover:bg-linen-100 transition-all flex items-center gap-1.5" data-back="1">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> 上一步
+          </button>
+          <button type="button" id="to-step-3-btn" disabled class="px-7 py-2.5 rounded-full bg-linen-300 text-white font-medium text-xs sm:text-sm transition-all cursor-not-allowed flex items-center gap-2">
+            <span>挑選日期時段</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= STEP 3: 水平滑動週曆 ＋ 6 欄高密度時段網格 ================= -->
+      <section id="step-3" class="step-pane hidden">
+        
+        <!-- 頂部月份標題與快捷按鈕 -->
+        <div class="flex items-center justify-between pb-3 border-b border-linen-200 mb-4">
+          <div class="flex items-center gap-2">
+            <h2 id="week-month-title" class="text-base font-bold text-charcoal"></h2>
+            <div class="flex gap-1 ml-1">
+              <button type="button" id="prev-week-btn" class="w-6 h-6 rounded-full hover:bg-linen-100 flex items-center justify-center text-linen-600 transition-colors">
+                <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+              </button>
+              <button type="button" id="next-week-btn" class="w-6 h-6 rounded-full hover:bg-linen-100 flex items-center justify-center text-linen-600 transition-colors">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" id="today-btn" class="px-3 py-1 rounded-full bg-linen-100 text-linen-700 text-[11px] font-medium hover:bg-linen-200 transition-all">
+              今天
+            </button>
+          </div>
+        </div>
+
+        <!-- 7 天水平日曆條 -->
+        <div class="bg-white rounded-2xl p-3 border border-linen-200/90 shadow-sm mb-5">
+          <div id="week-calendar-strip" class="grid grid-cols-7 gap-1 text-center">
+            <!-- JS 動態生成 7 天 -->
+          </div>
+        </div>
+
+        <!-- 說明提示 -->
+        <div class="flex items-center justify-between text-[11px] text-linen-500 mb-3 px-1">
+          <span class="flex items-center gap-1">
+            <i data-lucide="info" class="w-3.5 h-3.5 text-linen-400"></i> 淺白：可預約 ｜ 灰色：已約滿 / 休息
+          </span>
+          <span id="current-selected-time-text" class="font-semibold text-roseaccent">請點選時段</span>
+        </div>
+
+        <!-- 6 欄高密度時間網格 -->
+        <div class="bg-white rounded-2xl p-3 sm:p-4 border border-linen-200/90 shadow-sm">
+          <div id="dense-time-grid" class="grid grid-cols-6 gap-1.5 sm:gap-2 max-h-72 overflow-y-auto pr-1 custom-scroll">
+            <!-- JS 動態生成 6 欄時段 -->
+          </div>
+        </div>
+
+        <div class="mt-6 pt-5 border-t border-linen-200 flex items-center justify-between">
+          <button type="button" class="back-to-step-btn px-5 py-2.5 rounded-full text-xs font-medium text-linen-700 hover:bg-linen-100 transition-all flex items-center gap-1.5" data-back="2">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> 上一步
+          </button>
+          <button type="button" id="to-step-4-btn" disabled class="px-7 py-2.5 rounded-full bg-linen-300 text-white font-medium text-xs sm:text-sm transition-all cursor-not-allowed flex items-center gap-2">
+            <span>填寫預約資料</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= STEP 4: 客戶資料填寫與確認 ================= -->
+      <section id="step-4" class="step-pane hidden">
+        <div class="flex items-center justify-between pb-3 border-b border-linen-200 mb-5">
+          <h2 class="text-sm font-semibold text-charcoal flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-linen-500"></span> 確認預約明細並填寫資料
+          </h2>
+          <span class="text-xs text-linen-500 font-light">最後一步</span>
+        </div>
+
+        <!-- 明細卡片 -->
+        <div class="bg-linen-100/70 rounded-2xl p-4 border border-linen-200 mb-5 space-y-2 text-xs text-linen-700">
+          <div class="flex justify-between">
+            <span class="text-linen-500">施作項目：</span>
+            <span id="summary-services" class="font-semibold text-charcoal text-right">尚未選擇</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-linen-500">指定設計師：</span>
+            <span id="summary-stylist" class="font-semibold text-charcoal">尚未選擇</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-linen-500">預約日期時段：</span>
+            <span id="summary-datetime" class="font-semibold text-roseaccent">尚未選擇</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-linen-500">預計總時長：</span>
+            <span id="summary-duration" class="font-semibold text-charcoal">0 分鐘</span>
+          </div>
+          <div class="pt-2 border-t border-linen-200/80 flex justify-between items-center text-sm">
+            <span class="font-serif text-charcoal font-semibold">應付合計：</span>
+            <span id="summary-price" class="font-serif font-bold text-linen-800 text-base">NT$ 0</span>
+          </div>
+        </div>
+
+        <iframe name="booking_hidden_iframe" id="booking_hidden_iframe" style="display:none;"></iframe>
+
+        <!-- 串接最新的預約專用 GAS 網址 -->
+        <form id="finalBookingForm" 
+              action="https://script.google.com/macros/s/AKfycbw_6Zv2T7dMtDeRbjczzGhLXpJjogDsoqIcD3rTfVbKZlHwGDDG_IKCuCWhQ0do-zOx/exec" 
+              method="POST" 
+              target="booking_hidden_iframe" 
+              class="space-y-4">
+          
+          <input type="hidden" id="form-service" name="service">
+          <input type="hidden" id="form-stylist" name="stylist">
+          <input type="hidden" id="form-datetime" name="datetime">
+          <input type="hidden" id="form-price" name="price">
+          <input type="hidden" name="industry" value="美業預約系統">
+
+          <div class="grid sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-semibold text-charcoal mb-1" for="client-name">顧客姓名 / 稱謂 *</label>
+              <input type="text" id="client-name" name="name" required placeholder="例如：林小姐 / Emily" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-charcoal mb-1" for="client-phone">手機號碼 *</label>
+              <input type="tel" id="client-phone" name="phone" required placeholder="例如：0912-345678" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400">
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-semibold text-charcoal mb-1" for="client-line">LINE ID (方便發送提醒) *</label>
+              <input type="text" id="client-line" name="contact" required placeholder="請填寫您的 LINE ID" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-charcoal mb-1" for="client-email">Email (行事曆通知)</label>
+              <input type="email" id="client-email" name="email" placeholder="example@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-charcoal mb-1" for="client-notes">備註需求（如：指甲現況、有無孕婦、款式參考）</label>
+            <textarea id="client-notes" name="message" rows="2" placeholder="有任何特殊需求歡迎備註..." class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400"></textarea>
+          </div>
+
+          <div class="p-3 rounded-xl bg-linen-50 border border-linen-200 text-[11px] text-linen-600">
+            🌸 預約保留 15 分鐘，如需改期請於前一日透過官方 LINE 告知。
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-linen-200 flex items-center justify-between">
+            <button type="button" class="back-to-step-btn px-5 py-2.5 rounded-full text-xs font-medium text-linen-700 hover:bg-linen-100 transition-all flex items-center gap-1.5" data-back="3">
+              <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> 修改時段
+            </button>
+            <button type="submit" id="submit-booking-btn" class="px-7 py-2.5 rounded-full bg-linen-800 text-white font-medium text-xs sm:text-sm hover:bg-linen-900 transition-all shadow-md flex items-center gap-2">
+              <span>確認送出預約</span>
+              <i data-lucide="check" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ================= STEP 5: 預約成功畫面 ================= -->
+      <section id="step-success" class="step-pane hidden text-center py-8">
+        <div class="w-14 h-14 bg-linen-100 border border-linen-300 rounded-full flex items-center justify-center text-linen-700 mx-auto mb-4">
+          <i data-lucide="calendar-heart" class="w-7 h-7"></i>
+        </div>
+        
+        <h2 class="text-xl sm:text-2xl font-serif font-semibold text-charcoal mb-2">預約已成功送出！</h2>
+        <p class="text-xs sm:text-sm text-linen-600 max-w-md mx-auto mb-6 font-light">
+          我們已收到您的預約資訊，系統已同步發送確認訊息至後台。期待與您相見！
+        </p>
+
+        <div class="bg-linen-50 rounded-2xl p-5 border border-linen-200 max-w-md mx-auto text-left text-xs space-y-2 mb-6">
+          <p><strong class="text-linen-800">顧客：</strong> <span id="success-name"></span></p>
+          <p><strong class="text-linen-800">項目：</strong> <span id="success-service"></span></p>
+          <p><strong class="text-linen-800">時間：</strong> <span id="success-datetime" class="font-semibold text-roseaccent"></span></p>
+          <p><strong class="text-linen-800">地點：</strong> 台北市大安區 (預約制)</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a id="google-cal-btn" target="_blank" class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-linen-200 text-linen-800 text-xs font-semibold hover:bg-linen-300 transition-all flex items-center justify-center gap-2">
+            <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+            <span>加入 Google 行事曆</span>
+          </a>
+          <button type="button" onclick="location.reload()" class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-linen-800 text-white text-xs font-semibold hover:bg-linen-900 transition-all">
+            返回首頁 / 重新預約
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-6 text-center text-[11px] text-linen-500 border-t border-linen-200/60 bg-white/40">
+    <p class="font-serif tracking-widest uppercase">Blanc Studio ｜ 溫柔日系美學</p>
+    <p class="text-[10px] text-linen-400 mt-0.5">© 2026 Blanc Studio. Powered by Fru 客製所 自動化系統</p>
+  </footer>
+
+  <!-- ================= JS 邏輯 ================= -->
+  <script>
+    lucide.createIcons();
+
+    const bookingState = {
+      services: [],
+      totalPrice: 0,
+      totalDuration: 0,
+      stylist: '',
+      date: '',
+      time: ''
+    };
+
+    // 1. 分類過濾
+    const catBtns = document.querySelectorAll('.category-filter-btn');
+    const serviceItems = document.querySelectorAll('.service-item');
+
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catBtns.forEach(b => {
+          b.classList.remove('bg-linen-700', 'text-white');
+          b.classList.add('bg-linen-100', 'text-linen-700');
+        });
+        btn.classList.add('bg-linen-700', 'text-white');
+        btn.classList.remove('bg-linen-100', 'text-linen-700');
+
+        const cat = btn.dataset.cat;
+        serviceItems.forEach(item => {
+          item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'flex' : 'none';
+        });
+      });
+    });
+
+    // 2. 項目勾選計算
+    const serviceCheckboxes = document.querySelectorAll('input[name="services"]');
+    const selectedCountEl = document.getElementById('selected-count');
+    const selectedDurationEl = document.getElementById('selected-duration');
+    const totalPriceEl = document.getElementById('total-price');
+    const toStep2Btn = document.getElementById('to-step-2-btn');
+
+    serviceCheckboxes.forEach(cb => {
+      cb.addEventListener('change', updateServiceSelection);
+    });
+
+    function updateServiceSelection() {
+      const selected = Array.from(serviceCheckboxes).filter(cb => cb.checked);
+      bookingState.services = selected.map(cb => ({
+        name: cb.value,
+        price: parseInt(cb.dataset.price),
+        time: parseInt(cb.dataset.time)
+      }));
+
+      bookingState.totalPrice = bookingState.services.reduce((sum, item) => sum + item.price, 0);
+      bookingState.totalDuration = bookingState.services.reduce((sum, item) => sum + item.time, 0);
+
+      selectedCountEl.innerText = bookingState.services.length;
+      selectedDurationEl.innerText = bookingState.totalDuration;
+      totalPriceEl.innerText = `NT$ ${bookingState.totalPrice.toLocaleString()}`;
+
+      if (bookingState.services.length > 0) {
+        toStep2Btn.disabled = false;
+        toStep2Btn.classList.remove('bg-linen-300', 'cursor-not-allowed');
+        toStep2Btn.classList.add('bg-linen-800', 'hover:bg-linen-900', 'shadow-md');
+      } else {
+        toStep2Btn.disabled = true;
+        toStep2Btn.classList.add('bg-linen-300', 'cursor-not-allowed');
+        toStep2Btn.classList.remove('bg-linen-800', 'hover:bg-linen-900', 'shadow-md');
+      }
+    }
+
+    // 3. 步驟切換
+    function goToStep(step) {
+      document.querySelectorAll('.step-pane').forEach(p => p.classList.add('hidden'));
+      
+      if (step <= 4) {
+        document.getElementById(`step-${step}`).classList.remove('hidden');
+        const progress = ((step - 1) / 3) * 100;
+        document.getElementById('step-progress-bar').style.width = `${progress}%`;
+
+        document.querySelectorAll('.step-indicator').forEach(ind => {
+          const s = parseInt(ind.dataset.step);
+          const circle = ind.querySelector('div');
+          const text = ind.querySelector('span');
+
+          if (s <= step) {
+            circle.classList.remove('bg-linen-200', 'text-linen-600');
+            circle.classList.add('bg-linen-700', 'text-white');
+            text.classList.add('text-linen-800');
+            text.classList.remove('text-linen-400');
+          } else {
+            circle.classList.add('bg-linen-200', 'text-linen-600');
+            circle.classList.remove('bg-linen-700', 'text-white');
+            text.classList.remove('text-linen-800');
+            text.classList.add('text-linen-400');
+          }
+        });
+      } else {
+        document.getElementById('step-success').classList.remove('hidden');
+      }
+
+      window.scrollTo({ top: 80, behavior: 'smooth' });
+    }
+
+    toStep2Btn.addEventListener('click', () => goToStep(2));
+    document.querySelectorAll('.back-to-step-btn').forEach(btn => {
+      btn.addEventListener('click', () => goToStep(parseInt(btn.dataset.back)));
+    });
+
+    // 4. 設計師選擇
+    const stylistCards = document.querySelectorAll('.stylist-card');
+    const toStep3Btn = document.getElementById('to-step-3-btn');
+
+    stylistCards.forEach(card => {
+      card.addEventListener('click', () => {
+        stylistCards.forEach(c => {
+          c.classList.remove('border-linen-700', 'bg-white', 'shadow-md');
+          c.classList.add('border-linen-200', 'bg-white/60');
+        });
+        card.classList.add('border-linen-700', 'bg-white', 'shadow-md');
+        card.classList.remove('border-linen-200', 'bg-white/60');
+
+        bookingState.stylist = card.dataset.stylist;
+        toStep3Btn.disabled = false;
+        toStep3Btn.classList.remove('bg-linen-300', 'cursor-not-allowed');
+        toStep3Btn.classList.add('bg-linen-800', 'hover:bg-linen-900', 'shadow-md');
+      });
+    });
+
+    toStep3Btn.addEventListener('click', () => {
+      initWeekCalendar();
+      goToStep(3);
+    });
+
+    // 5. 週曆條 + 6 欄時段網格核心邏輯
+    let currentWeekStartDate = new Date();
+    currentWeekStartDate.setHours(0, 0, 0, 0);
+
+    const weekMonthTitle = document.getElementById('week-month-title');
+    const weekCalendarStrip = document.getElementById('week-calendar-strip');
+    const denseTimeGrid = document.getElementById('dense-time-grid');
+    const toStep4Btn = document.getElementById('to-step-4-btn');
+    const currentSelectedTimeText = document.getElementById('current-selected-time-text');
+
+    const dayNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+
+    function generateTimeIntervals() {
+      const slots = [];
+      for (let hour = 10; hour <= 20; hour++) {
+        for (let min of [0, 10, 20, 30, 40, 50]) {
+          slots.push(`${hour}:${String(min).padStart(2, '0')}`);
+        }
+      }
+      return slots;
+    }
+
+    const allTimeSlots = generateTimeIntervals();
+
+    function initWeekCalendar() {
+      renderWeekStrip(currentWeekStartDate);
+    }
+
+    function renderWeekStrip(startDate) {
+      weekCalendarStrip.innerHTML = '';
+      
+      const year = startDate.getFullYear();
+      const month = startDate.getMonth() + 1;
+      const day = startDate.getDate();
+      
+      weekMonthTitle.innerText = `${month}月${day}日, ${year}`;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(startDate);
+        d.setDate(startDate.getDate() + i);
+
+        const dayWrapper = document.createElement('div');
+        dayWrapper.className = 'flex flex-col items-center cursor-pointer group py-1';
+
+        const dayNameLabel = document.createElement('span');
+        dayNameLabel.className = 'text-[10px] text-linen-400 mb-1.5 font-medium';
+        dayNameLabel.innerText = dayNames[d.getDay()];
+
+        const dayNumberBtn = document.createElement('div');
+        dayNumberBtn.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all';
+        dayNumberBtn.innerText = d.getDate();
+
+        const formattedDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+        if (bookingState.date === formattedDate) {
+          dayNumberBtn.classList.add('bg-roseaccent', 'text-white', 'shadow-sm');
+        } else if (d < today) {
+          dayNumberBtn.classList.add('text-linen-300', 'cursor-not-allowed');
+        } else {
+          dayNumberBtn.classList.add('text-charcoal', 'hover:bg-linen-100');
+        }
+
+        if (d >= today) {
+          dayWrapper.addEventListener('click', () => {
+            bookingState.date = formattedDate;
+            bookingState.time = '';
+            toStep4Btn.disabled = true;
+            toStep4Btn.classList.add('bg-linen-300', 'cursor-not-allowed');
+            toStep4Btn.classList.remove('bg-linen-800');
+
+            renderWeekStrip(startDate);
+            renderDenseTimeSlots(formattedDate);
+          });
+        }
+
+        dayWrapper.appendChild(dayNameLabel);
+        dayWrapper.appendChild(dayNumberBtn);
+        weekCalendarStrip.appendChild(dayWrapper);
+      }
+
+      if (!bookingState.date) {
+        const firstValidDate = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}-${String(startDate.getDate()).padStart(2, '0')}`;
+        bookingState.date = firstValidDate;
+        renderDenseTimeSlots(firstValidDate);
+        renderWeekStrip(startDate);
+      }
+    }
+
+    function renderDenseTimeSlots(dateStr) {
+      denseTimeGrid.innerHTML = '';
+      currentSelectedTimeText.innerText = `${dateStr} 請選擇時段`;
+
+      allTimeSlots.forEach((timeStr, idx) => {
+        const slotBtn = document.createElement('button');
+        slotBtn.type = 'button';
+        slotBtn.innerText = timeStr;
+
+        const isBooked = (idx % 7 === 2) || (idx % 11 === 4) || (idx > 48);
+
+        if (isBooked) {
+          slotBtn.className = 'py-2 sm:py-2.5 rounded-lg bg-linen-100/70 text-linen-300 text-[11px] font-light cursor-not-allowed border border-transparent';
+          slotBtn.disabled = true;
+        } else {
+          slotBtn.className = 'time-pill py-2 sm:py-2.5 rounded-lg bg-linen-50 hover:bg-linen-200 text-charcoal text-[11px] font-medium transition-all border border-linen-200/80';
+          
+          if (bookingState.time === timeStr) {
+            slotBtn.classList.remove('bg-linen-50', 'text-charcoal');
+            slotBtn.classList.add('bg-roseaccent', 'text-white', 'border-roseaccent', 'shadow-sm');
+          }
+
+          slotBtn.addEventListener('click', () => {
+            document.querySelectorAll('.time-pill').forEach(b => {
+              b.classList.remove('bg-roseaccent', 'text-white', 'border-roseaccent', 'shadow-sm');
+              b.classList.add('bg-linen-50', 'text-charcoal');
+            });
+
+            slotBtn.classList.remove('bg-linen-50', 'text-charcoal');
+            slotBtn.classList.add('bg-roseaccent', 'text-white', 'border-roseaccent', 'shadow-sm');
+
+            bookingState.time = timeStr;
+            currentSelectedTimeText.innerText = `${dateStr} ｜ ${timeStr}`;
+
+            toStep4Btn.disabled = false;
+            toStep4Btn.classList.remove('bg-linen-300', 'cursor-not-allowed');
+            toStep4Btn.classList.add('bg-linen-800', 'hover:bg-linen-900', 'shadow-md');
+          });
+        }
+
+        denseTimeGrid.appendChild(slotBtn);
+      });
+    }
+
+    document.getElementById('prev-week-btn').addEventListener('click', () => {
+      currentWeekStartDate.setDate(currentWeekStartDate.getDate() - 7);
+      renderWeekStrip(currentWeekStartDate);
+    });
+
+    document.getElementById('next-week-btn').addEventListener('click', () => {
+      currentWeekStartDate.setDate(currentWeekStartDate.getDate() + 7);
+      renderWeekStrip(currentWeekStartDate);
+    });
+
+    document.getElementById('today-btn').addEventListener('click', () => {
+      currentWeekStartDate = new Date();
+      currentWeekStartDate.setHours(0, 0, 0, 0);
+      const todayStr = `${currentWeekStartDate.getFullYear()}-${String(currentWeekStartDate.getMonth() + 1).padStart(2, '0')}-${String(currentWeekStartDate.getDate()).padStart(2, '0')}`;
+      bookingState.date = todayStr;
+      bookingState.time = '';
+      renderWeekStrip(currentWeekStartDate);
+      renderDenseTimeSlots(todayStr);
+    });
+
+    toStep4Btn.addEventListener('click', () => {
+      const serviceNames = bookingState.services.map(s => s.name).join(' + ');
+      document.getElementById('summary-services').innerText = serviceNames;
+      document.getElementById('summary-stylist').innerText = bookingState.stylist;
+      document.getElementById('summary-datetime').innerText = `${bookingState.date} ${bookingState.time}`;
+      document.getElementById('summary-duration').innerText = `${bookingState.totalDuration} 分鐘`;
+      document.getElementById('summary-price').innerText = `NT$ ${bookingState.totalPrice.toLocaleString()}`;
+
+      document.getElementById('form-service').value = `[預約] ${serviceNames}`;
+      document.getElementById('form-stylist').value = bookingState.stylist;
+      document.getElementById('form-datetime').value = `${bookingState.date} ${bookingState.time}`;
+      document.getElementById('form-price').value = `NT$ ${bookingState.totalPrice}`;
+
+      goToStep(4);
+    });
+
+    // 6. 表單提交至 GAS
+    const finalBookingForm = document.getElementById('finalBookingForm');
+    const submitBookingBtn = document.getElementById('submit-booking-btn');
+    let isBookingSubmitted = false;
+
+    finalBookingForm.addEventListener('submit', () => {
+      isBookingSubmitted = true;
+      submitBookingBtn.innerHTML = `<span>⏳ 預約寫入中...</span>`;
+      submitBookingBtn.disabled = true;
+    });
+
+    document.getElementById('booking_hidden_iframe').addEventListener('load', () => {
+      if (isBookingSubmitted) {
+        const name = document.getElementById('client-name').value;
+        const serviceNames = bookingState.services.map(s => s.name).join('、');
+        
+        document.getElementById('success-name').innerText = name;
+        document.getElementById('success-service').innerText = serviceNames;
+        document.getElementById('success-datetime').innerText = `${bookingState.date} ${bookingState.time}`;
+
+        generateGoogleCalendarLink(serviceNames, bookingState.date, bookingState.time, bookingState.totalDuration);
+
+        goToStep(5);
+        isBookingSubmitted = false;
+        lucide.createIcons();
+      }
+    });
+
+    function generateGoogleCalendarLink(serviceTitle, dateStr, timeStr, durationMinutes) {
+      const startDateTime = new Date(`${dateStr}T${timeStr}:00`);
+      const endDateTime = new Date(startDateTime.getTime() + durationMinutes * 60000);
+      const formatCalDate = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
+
+      const title = encodeURIComponent(`【Blanc Studio】${serviceTitle} 預約`);
+      const details = encodeURIComponent(`Blanc Studio 預約。\n項目：${serviceTitle}\n時長：${durationMinutes} 分鐘`);
+      const location = encodeURIComponent('台北市大安區 (預約制)');
+      const dates = `${formatCalDate(startDateTime)}/${formatCalDate(endDateTime)}`;
+
+      const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`;
+      document.getElementById('google-cal-btn').href = calUrl;
+    }
+  </script>
+</body>
+</html>
