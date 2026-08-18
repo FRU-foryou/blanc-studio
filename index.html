@@ -6,8 +6,6 @@
   <title>Blanc Studio ｜ 溫柔美學・線上預約系統</title>
   <meta name="description" content="給自己一段放鬆的時間。專業日式美甲、美睫與深層肌膚護理線上預約。">
   
-  <!-- LINE LIFF SDK -->
-  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts -->
@@ -365,7 +363,6 @@
           <input type="hidden" id="form-stylist" name="stylist">
           <input type="hidden" id="form-datetime" name="datetime">
           <input type="hidden" id="form-price" name="price">
-          <input type="hidden" id="form-line-user-id" name="lineUserId">
           <input type="hidden" name="industry" value="美業預約系統">
 
           <div class="grid sm:grid-cols-2 gap-3.5">
@@ -381,22 +378,22 @@
 
           <div class="grid sm:grid-cols-2 gap-3.5">
             <div>
-              <label class="block text-xs font-semibold text-charcoal mb-1" for="client-line">LINE ID (方便發送提醒) *</label>
-              <input type="text" id="client-line" name="contact" required placeholder="請填寫您的 LINE ID" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400">
+              <label class="block text-xs font-semibold text-charcoal mb-1" for="client-line">LINE ID <span class="text-linen-400 font-normal">(選填，方便發送通知)</span></label>
+              <input type="text" id="client-line" name="contact" placeholder="例如：emily_nail (選填)" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-charcoal mb-1" for="client-email">Email (行事曆通知)</label>
-              <input type="email" id="client-email" name="email" placeholder="example@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400">
+              <label class="block text-xs font-semibold text-charcoal mb-1" for="client-email">Email <span class="text-linen-400 font-normal">(選填，行事曆通知)</span></label>
+              <input type="email" id="client-email" name="email" placeholder="example@gmail.com (選填)" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400">
             </div>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-charcoal mb-1" for="client-notes">備註需求（如：指甲現況、有無孕婦、款式參考）</label>
+            <label class="block text-xs font-semibold text-charcoal mb-1" for="client-notes">備註需求（如：指甲現況、款式參考）</label>
             <textarea id="client-notes" name="message" rows="2" placeholder="有任何特殊需求歡迎備註..." class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-linen-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-linen-400"></textarea>
           </div>
 
           <div class="p-3 rounded-xl bg-linen-50 border border-linen-200 text-[11px] text-linen-600">
-            🌸 預約成功後將自動透過 LINE 發送確認憑證，請留意官方 LINE 訊息。
+            🌸 預約送出後，系統將即時通知美學團隊。請留意後續確認。
           </div>
 
           <div class="mt-6 pt-4 border-t border-linen-200 flex items-center justify-between">
@@ -412,29 +409,38 @@
       </section>
 
       <!-- ================= STEP 5: 預約成功畫面 ================= -->
-      <section id="step-success" class="step-pane hidden text-center py-8">
+      <section id="step-success" class="step-pane hidden text-center py-6 sm:py-8">
         <div class="w-14 h-14 bg-linen-100 border border-linen-300 rounded-full flex items-center justify-center text-linen-700 mx-auto mb-4">
           <i data-lucide="calendar-heart" class="w-7 h-7"></i>
         </div>
         
         <h2 class="text-xl sm:text-2xl font-serif font-semibold text-charcoal mb-2">預約已成功送出！</h2>
-        <p class="text-xs sm:text-sm text-linen-600 max-w-md mx-auto mb-6 font-light">
-          我們已收到您的預約資訊，系統已同步發送 LINE 確認憑證至您的聊天室。期待與您相見！
+        <p class="text-xs sm:text-sm text-linen-600 max-w-md mx-auto mb-5 font-light">
+          我們已收到您的預約資訊，系統已同步發送 LINE 確認憑證至後台。期待與您相見！
         </p>
 
-        <div class="bg-linen-50 rounded-2xl p-5 border border-linen-200 max-w-md mx-auto text-left text-xs space-y-2 mb-6">
-          <p><strong class="text-linen-800">顧客：</strong> <span id="success-name"></span></p>
-          <p><strong class="text-linen-800">項目：</strong> <span id="success-service"></span></p>
-          <p><strong class="text-linen-800">時間：</strong> <span id="success-datetime" class="font-semibold text-roseaccent"></span></p>
-          <p><strong class="text-linen-800">地點：</strong> 台北市大安區 (預約制)</p>
+        <div class="bg-[#8E7356]/80 text-white rounded-2xl p-5 border border-linen-300 max-w-md mx-auto text-left text-xs space-y-2 mb-6 shadow-sm backdrop-blur-sm">
+          <p><span class="text-linen-100 font-medium">顧客：</span> <span id="success-name" class="font-semibold text-white"></span></p>
+          <p><span class="text-linen-100 font-medium">項目：</span> <span id="success-service" class="text-white"></span></p>
+          <p><span class="text-linen-100 font-medium">時間：</span> <span id="success-datetime" class="font-semibold text-rose-200"></span></p>
+          <p><span class="text-linen-100 font-medium">地點：</span> 台北市大安區 (預約制)</p>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a id="google-cal-btn" target="_blank" class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-linen-200 text-linen-800 text-xs font-semibold hover:bg-linen-300 transition-all flex items-center justify-center gap-2">
+        <div class="flex flex-col gap-3 max-w-md mx-auto">
+          <!-- 返回 LINE@ 官方帳號按鈕 -->
+          <a href="https://line.me/R/ti/p/@560ehozv" target="_blank" class="w-full py-3 rounded-2xl bg-[#06C755] text-white text-sm font-semibold hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-sm">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>💬 返回官方 LINE@ (@560ehozv)</span>
+          </a>
+
+          <!-- 加入 Google 行事曆 -->
+          <a id="google-cal-btn" target="_blank" class="w-full py-3 rounded-2xl bg-linen-200 text-linen-800 text-xs font-semibold hover:bg-linen-300 transition-all flex items-center justify-center gap-2">
             <i data-lucide="calendar-plus" class="w-4 h-4"></i>
             <span>加入 Google 行事曆</span>
           </a>
-          <button type="button" onclick="location.reload()" class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-linen-800 text-white text-xs font-semibold hover:bg-linen-900 transition-all">
+
+          <!-- 返回首頁 / 重新預約 -->
+          <button type="button" onclick="location.reload()" class="w-full py-3 rounded-2xl bg-linen-800 text-white text-xs font-semibold hover:bg-linen-900 transition-all">
             返回首頁 / 重新預約
           </button>
         </div>
@@ -449,32 +455,11 @@
     <p class="text-[10px] text-linen-400 mt-0.5">© 2026 Blanc Studio. Powered by Fru 客製所 自動化系統</p>
   </footer>
 
-  <!-- ================= JS 核心 (LIFF 授權 ＋ 防撞排程) ================= -->
+  <!-- ================= JS 核心 ================= -->
   <script>
     lucide.createIcons();
 
-    // 您的專屬 LIFF ID
-    const MY_LIFF_ID = "2011120555-NxN8BahP";
     const GAS_GET_URL = "https://script.google.com/macros/s/AKfycbwgOudQDQEFhVuWAVrZL6MXZzp_WyIOfjKmfuMQUV44eLCXk6IWooHi28zctYRiWZTZ/exec";
-
-    // 🚀 初始化 LIFF 並自動抓取顧客的 LINE Profile
-    async function initializeLiff() {
-      if (!MY_LIFF_ID) return;
-      try {
-        await liff.init({ liffId: MY_LIFF_ID });
-        if (liff.isLoggedIn()) {
-          const profile = await liff.getProfile();
-          if (profile && profile.userId) {
-            document.getElementById('form-line-user-id').value = profile.userId;
-            const nameInput = document.getElementById('client-name');
-            if (!nameInput.value) nameInput.value = profile.displayName;
-          }
-        }
-      } catch (err) {
-        console.warn("LIFF 初始化跳過：", err);
-      }
-    }
-    initializeLiff();
 
     let allStylistsSchedule = {
       Yuki: { bookedSlots: [], weeklyOff: [0, 1], specialOffDates: [], manualClosedSlots: [] },
